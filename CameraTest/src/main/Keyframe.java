@@ -1,11 +1,10 @@
 package main;
 
-import java.util.Dictionary;
-import java.util.Map;
-
+import java.io.Serializable;
 import org.opencv.core.Point;
 
-public class Keyframe {
+public class Keyframe implements Serializable {
+	private static final long serialVersionUID = 1472321397216841824L;
 	public static final int NUM_POINTS = 14;
 	public static final int[][] ADJACENCY_MAP = {
 				{1, 0}, // head
@@ -27,7 +26,7 @@ public class Keyframe {
 	};
 	
 	
-	private Point[] points;
+	private transient Point[] points;
 	private float timestamp;
 	
 	public Keyframe() {
