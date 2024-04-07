@@ -4,11 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import javax.sound.sampled.LineUnavailableException;
+
 import org.opencv.core.Core;
 
 public class Mystical {
 	private Thinker thinker;
 	private Observer observer;
+	// private Speaker speaker;
 	
 	private boolean inProgress = false;
 	
@@ -41,6 +44,7 @@ public class Mystical {
 		DanceStorage.getKeyframes();
 		
 		observer.begin();
+		Speaker.playAudio("res/audio/mother3.wav");
 		
 		long then = System.nanoTime();
 		long now;
@@ -106,8 +110,6 @@ public class Mystical {
 		Mystical mystical = new Mystical();
 		Viewer viewer = new Viewer(mystical.getObserver());
 		DanceStorage.getKeyframes();
-		mystical.beginDance(dur, sTime);
-		System.out.println("FINISHED!");
-		System.out.println("FINAL SCORE: " + scoreSum / (dur/sTime));
+		mystical.beginDance(41, 1);
 	}
 }
