@@ -72,9 +72,16 @@ public class Grabber {
 				
 				g.drawImage(icon.getImage(), 0, 0, icon.getIconWidth(), icon.getIconHeight(), null);
 				if (keyFrame != null) {
-					for (Point p : keyFrame.getPoints()) {
-						g.setColor(Color.YELLOW);
+					final Point[] points = keyFrame.getPoints();
+					g.setColor(Color.YELLOW);
+					for (Point p : points) {
 						g.fillOval((int)p.x-5, (int)p.y-5, 10, 10);
+					}
+					g.setColor(Color.RED);
+					for (int[] pair : Keyframe.ADJACENCY_MAP) {
+						Point p1 = points[pair[0]];
+						Point p2 = points[pair[1]];
+						g.drawLine((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
 					}
 				}
 			}
