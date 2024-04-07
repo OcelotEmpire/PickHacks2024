@@ -52,7 +52,9 @@ public class Keyframe {
 		double sum = 0d;
 		
 		for (int i = 0; i < NUM_POINTS; i++) {
-			sum += Keyframe.comparePoint(k1.getPoints()[i], k2.getPoints()[i], i);
+			Point diff = new Point(k1.points[0].x - k2.points[0].x, k1.points[0].y - k2.points[0].y);
+			Point compPoint = new Point (k2.getPoints()[i].x - diff.x, k2.getPoints()[i].y - diff.y);
+			sum += Keyframe.comparePoint(k1.getPoints()[i], compPoint, i);
 		}
 		
 //		System.out.println("SUM: " + sum);
