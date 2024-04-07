@@ -17,8 +17,6 @@ public class GrabberPoseEstimation {
 	static final String PROTO_FILE = "res/pose_deploy_linevec_faster_4_stages.prototxt";
 	static final String WEIGHTS_FILE = "res/pose_iter_160000.caffemodel";
 	
-	static final int NUM_POINTS = 14;
-	
 	private Net net;
 	
 	public GrabberPoseEstimation() {
@@ -26,7 +24,7 @@ public class GrabberPoseEstimation {
 		net = Dnn.readNetFromCaffe(PROTO_FILE, WEIGHTS_FILE);
 	}
 	
-	public void estimatePose(Mat frame) {
+	public Keyframe estimatePose(Mat frame) {
 		System.out.print("Input frame: ");
 		System.out.println(frame);
 		final int frameWidth = frame.size(1), frameHeight = frame.size(0);
@@ -41,8 +39,8 @@ public class GrabberPoseEstimation {
 		
 		// remove later
 		int outHeight = output.size(2), outWidth = output.size(3);
-		Point points[] = new Point[NUM_POINTS];
-		for (int i = 0; i < NUM_POINTS; i++) {
+		Point points[] = new Point[Keyframe.NUM_POINTS];
+		for (int i = 0; i < Keyframe.NUM_POINTS; i++) {
 			Mat probMap = new Mat(outHeight, outWidth, CvType.CV_32F);
 			
 			Point p = new Point(-1,-1);
@@ -62,6 +60,8 @@ public class GrabberPoseEstimation {
 		}
 		System.out.print("Output blob: ");
 		System.out.println(output);
+		
+		return new Keyframe(points, 0);
 	}
 	
 	public static void main(String[] args) {

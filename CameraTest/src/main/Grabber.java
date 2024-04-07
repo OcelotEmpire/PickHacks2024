@@ -4,19 +4,23 @@
 // Importing openCV modules 
 package main;
 
+import java.awt.Color;
 // importing swing and awt classes 
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
+import org.opencv.core.Point;
 import org.opencv.imgcodecs.Imgcodecs;
 // Importing VideoCapture class 
 // This class is responsible for taking screenshot 
@@ -28,7 +32,7 @@ public class Grabber {
 	private JFrame frame;
 	
 	// Camera screen
-	private JLabel cameraScreen;
+	private JPanel cameraScreen;
 
 	// Button for image capture
 	private JButton btnCapture;
@@ -39,6 +43,7 @@ public class Grabber {
 
 	// Store image as 2D matrix
 	private Mat image;
+	private Keyframe keyFrame = null;
 
 	private boolean clicked = false;
 	
@@ -49,7 +54,31 @@ public class Grabber {
 		// Designing UI
 		frame.setLayout(null);
 
-		cameraScreen = new JLabel();
+		cameraScreen = new JPanel() {
+			@Override
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				// convert matrix to byte
+				MatOfByte buf = new MatOfByte();
+				byte[] imageData;
+				ImageIcon icon;
+				
+				Imgcodecs.imencode(".jpg", image, buf);
+
+				imageData = buf.toArray();
+
+				// Add to JLabel
+				icon = new ImageIcon(imageData);
+				
+				g.drawImage(icon.getImage(), 0, 0, icon.getIconWidth(), icon.getIconHeight(), null);
+				if (keyFrame != null) {
+					for (Point p : keyFrame.getPoints()) {
+						g.setColor(Color.YELLOW);
+						g.fillOval((int)p.x-5, (int)p.y-5, 10, 10);
+					}
+				}
+			}
+		};
 		cameraScreen.setBounds(0, 0, 640, 480);
 		frame.add(cameraScreen);
 
@@ -83,21 +112,11 @@ public class Grabber {
 	// Creating a camera
 	public void startCamera() {
 		System.out.println("Starting camera...");
-		byte[] imageData;
-
-		ImageIcon icon;
+		
 		while (true) {
 			getImage();
-			// convert matrix to byte
-			MatOfByte buf = new MatOfByte();
 			
-			Imgcodecs.imencode(".jpg", image, buf);
-
-			imageData = buf.toArray();
-
-			// Add to JLabel
-			icon = new ImageIcon(imageData);
-			cameraScreen.setIcon(icon);
+			cameraScreen.repaint();
 
 			// Capture and save to file
 			if (clicked) {
@@ -123,7 +142,7 @@ public class Grabber {
 		return image.clone();
 	}
 	synchronized void estimatePose() {
-		gpe.estimatePose(getImage());
+		keyFrame = gpe.estimatePose(getImage());
 	}
 
 	// Main driver method
