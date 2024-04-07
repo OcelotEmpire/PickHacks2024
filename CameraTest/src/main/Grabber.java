@@ -28,6 +28,8 @@ import org.opencv.videoio.VideoCapture;
 
 // Class - Swing Class 
 public class Grabber {
+	public static final int CAMERA_NUM = 0;
+	
 	// Window
 	private JFrame frame;
 	
@@ -114,7 +116,7 @@ public class Grabber {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 
-		capture = new VideoCapture(1);
+		capture = new VideoCapture(CAMERA_NUM);
 		image = new Mat();
 		gpe = new GrabberPoseEstimation();
 	}

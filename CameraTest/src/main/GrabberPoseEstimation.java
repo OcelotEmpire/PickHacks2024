@@ -42,7 +42,11 @@ public class GrabberPoseEstimation {
 		Point points[] = new Point[Keyframe.NUM_POINTS];
 		for (int i = 0; i < Keyframe.NUM_POINTS; i++) {
 			Mat probMap = new Mat(outHeight, outWidth, CvType.CV_32F);
-			
+			for (int r = 0; r < outHeight; r++) {
+				for (int c = 0; c < outWidth; c++) {
+					probMap.put(new int[] {r, c}, output.get(new int[] {0, i, r, c}));
+				}
+			}
 			Point p = new Point(-1,-1);
 			Core.MinMaxLocResult result = org.opencv.core.Core.minMaxLoc(probMap);
 			if (result.maxVal > 0.1)
