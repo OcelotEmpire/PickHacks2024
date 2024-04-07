@@ -28,4 +28,9 @@ public class Keyframe {
 	{
 		return this.timestamp;
 	}
+	
+	static public double compare(Keyframe k1, Keyframe k2)
+	{
+		return 0d;
+	}
 }
