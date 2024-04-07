@@ -14,6 +14,11 @@ public class Mystical {
 	
 	private float progress = 0;
 	
+	private static double dur = 10d;
+	private static double sTime = 1d;
+	
+	private static double scoreSum = 0d;
+	
 	public Mystical() {
 		thinker = new Thinker(4);
 		observer = new Observer(0);
@@ -65,6 +70,7 @@ public class Mystical {
 				if (!DanceStorage.setToWrite)
 				{
 					System.out.println("FRAME SCORE: " + Keyframe.compare(keyframe, DanceStorage.GetClosestKeyToTime(keyframe.getTimestamp())));
+					scoreSum +=  Keyframe.compare(keyframe, DanceStorage.GetClosestKeyToTime(keyframe.getTimestamp()));
 				}
 				DanceStorage.add(keyframe);
 			} catch (InterruptedException | ExecutionException e) {
@@ -100,6 +106,8 @@ public class Mystical {
 		Mystical mystical = new Mystical();
 		Viewer viewer = new Viewer(mystical.getObserver());
 		DanceStorage.getKeyframes();
-		mystical.beginDance(10, 1);
+		mystical.beginDance(dur, sTime);
+		System.out.println("FINISHED!");
+		System.out.println("FINAL SCORE: " + scoreSum / (dur/sTime));
 	}
 }
