@@ -11,6 +11,13 @@ public class Keyframe {
 				{1, 8}, {8, 9}, {9, 10}, // right leg
 				{1, 11}, {11, 12}, {12, 13}, // left leg
 			};
+	public static final String[] KEYFRAME_NAMES	= {
+			"head", "neck",
+			"r_shoulder", "r_elbow", "r_hand",
+			"l_shoulder", "l_elbow", "l_hand",
+			"r_hip", "r_knee", "r_foot",
+			"l_hip", "l_knee", "l_foot",
+	};
 	
 	private Point[] points;
 	private float timestamp;
