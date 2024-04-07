@@ -2,7 +2,7 @@ package main;
 
 import java.awt.EventQueue;
 
-import org.opencv.core.MatOfByte;
+import org.opencv.core.Mat;
 import org.opencv.dnn.Dnn;
 import org.opencv.dnn.Net;
 
@@ -28,7 +28,7 @@ public class GrabberPoseEstimation {
 			grabber.startCamera();
 		}).start();
 		
-		MatOfByte buf = grabber.takeCapture();
+		Mat buf = grabber.getImage();
 		
 		
 	}

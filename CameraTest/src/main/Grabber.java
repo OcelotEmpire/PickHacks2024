@@ -74,7 +74,9 @@ public class Grabber {
 
 		ImageIcon icon;
 		while (true) {
-			MatOfByte buf = this.takeCapture();
+			getImage();
+			// convert matrix to byte
+			MatOfByte buf = new MatOfByte();
 			
 			Imgcodecs.imencode(".jpg", image, buf);
 
@@ -101,14 +103,11 @@ public class Grabber {
 			}
 		}
 	}
-	synchronized MatOfByte takeCapture() {
+	synchronized Mat getImage() {
 		// read image to matrix
 		capture.read(image);
-
-		// convert matrix to byte
-		final MatOfByte buf = new MatOfByte();
 		
-		return buf;
+		return image.clone();
 	}
 
 	// Main driver method
