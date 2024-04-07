@@ -1,5 +1,7 @@
 package main;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import org.opencv.core.Core;
@@ -21,6 +23,17 @@ public class Mystical {
 		if (inProgress) return;
 		System.out.println("Beginning Dance!");
 		inProgress = true;
+		
+		File file  = new File(String.valueOf("DanceStorage.txt"));
+		if (!file.exists())
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		DanceStorage.getKeyframes();
 		
 		observer.begin();
 		
@@ -46,6 +59,7 @@ public class Mystical {
 			try {
 				keyframe = thinker.getQueue().poll().get();
 				System.out.println(keyframe.getPoints()[0] + ", " + keyframe.getTimestamp());
+				DanceStorage.add(keyframe);
 			} catch (InterruptedException | ExecutionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -78,6 +92,7 @@ public class Mystical {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		Mystical mystical = new Mystical();
 		Viewer viewer = new Viewer(mystical.getObserver());
-		mystical.beginDance(10, 0.5);
+		DanceStorage.getKeyframes();
+		mystical.beginDance(10, 0.1);
 	}
 }

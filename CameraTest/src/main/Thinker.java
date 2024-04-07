@@ -81,7 +81,7 @@ public class Thinker {
 			}
 			Point p = new Point(-1,-1);
 			Core.MinMaxLocResult result = org.opencv.core.Core.minMaxLoc(probMap);
-			if (result.maxVal > 0.1)
+			if (result.maxVal > 0.4)
 			{
 				p = result.maxLoc;
 				p.x *= (float) frameWidth / outWidth;
