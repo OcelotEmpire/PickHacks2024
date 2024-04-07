@@ -9,6 +9,7 @@ import javax.sound.sampled.LineUnavailableException;
 import org.opencv.core.Core;
 
 public class Mystical {
+	public static final int WINNING_SCORE = 100;
 	private Thinker thinker;
 	private Observer observer;
 	private Speaker speaker;
@@ -25,7 +26,7 @@ public class Mystical {
 	
 	public Mystical() {
 		thinker = new Thinker(4);
-		observer = new Observer(1);
+		observer = new Observer(0);
 		try {
 			speaker = new Speaker();
 		} catch (LineUnavailableException e) {
@@ -131,5 +132,7 @@ public class Mystical {
 		mystical.beginDance(dur, sTime);
 		
 		System.out.println("FINAL SCORE: " + scoreSum/(dur/sTime));
+		
+		if (scoreSum > WINNING_SCORE) new Door().open();
 	}
 }
