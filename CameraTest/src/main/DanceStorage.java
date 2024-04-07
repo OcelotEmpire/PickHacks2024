@@ -11,6 +11,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class DanceStorage implements Serializable{
+	
+	public static boolean setToWrite = false;
 
 	private static final long serialVersionUID = 1L;
 	
@@ -24,7 +26,7 @@ public class DanceStorage implements Serializable{
 		    try { 
 		    	  for (;;) { 
 		    	    keyframes.add((Keyframe) objectInputStream.readObject());
-		    	    // System.out.println(keyframes.get(keyframes.size() - 1));
+		    	    System.out.println(keyframes.get(keyframes.size() - 1));
 		    	  }
 		    	} catch (EOFException e) {
 		    	  // End of stream
@@ -40,6 +42,7 @@ public class DanceStorage implements Serializable{
 	}
 
 	public static void setKeyframes(ArrayList<Keyframe> k) {
+		if (!setToWrite) return;
 		keyframes = k;
 		
 		FileOutputStream fileOutputStream;
@@ -68,6 +71,12 @@ public class DanceStorage implements Serializable{
 	{
 		keyframes.add(k);
 		DanceStorage.setKeyframes(keyframes);
+	}
+	
+	public static void clear()
+	{
+		keyframes = new ArrayList<>();
+		setKeyframes(keyframes);
 	}
 
 }
