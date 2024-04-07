@@ -10,6 +10,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.opencv.core.Point;
+
 public class DanceStorage implements Serializable{
 	
 	public static boolean setToWrite = false;
@@ -22,16 +24,25 @@ public class DanceStorage implements Serializable{
 		try {
 			FileInputStream fileInputStream = new FileInputStream("DanceStorage.txt");
 		    ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+		    FileInputStream fileInputStream2 = new FileInputStream("Points.txt");
+		    ObjectInputStream objectInputStream2 = new ObjectInputStream(fileInputStream2);
 		    keyframes = new ArrayList<>();
 		    try { 
 		    	  for (;;) { 
 		    	    keyframes.add((Keyframe) objectInputStream.readObject());
-		    	    System.out.println(keyframes.get(keyframes.size() - 1));
+		    	    Point[] newPoints = new Point[14];
+		    	    for (int i = 0; i < 14; i++)
+		    	    {
+		    	    	newPoints[i] = new Point((double) objectInputStream2.readObject(), (double) objectInputStream2.readObject());
+		    	    }
+		    	    keyframes.get(keyframes.size() - 1).setPoints(newPoints);
+		    	    System.out.println(keyframes.get(keyframes.size() - 1).getPoints()[0].x);
 		    	  }
 		    	} catch (EOFException e) {
 		    	  // End of stream
 		    	} 
 		    objectInputStream.close(); 
+		    objectInputStream2.close();
 		}
 		catch(Exception e)
 		{
@@ -46,17 +57,28 @@ public class DanceStorage implements Serializable{
 		keyframes = k;
 		
 		FileOutputStream fileOutputStream;
+		FileOutputStream fileOutputStream2;
 		try {
 			fileOutputStream = new FileOutputStream("DanceStorage.txt");
+			fileOutputStream2 = new FileOutputStream("Points.txt");
 			  ObjectOutputStream objectOutputStream;
+			  ObjectOutputStream objectOutputStream2;
 				try {
 					objectOutputStream = new ObjectOutputStream(fileOutputStream);
+					objectOutputStream2 = new ObjectOutputStream(fileOutputStream2);
 					for (Keyframe frame : k)
 					{
 						objectOutputStream.writeObject(frame);
+						for (Point p : frame.getPoints())
+						{
+							objectOutputStream2.writeObject(p.x);
+							objectOutputStream2.writeObject(p.y);
+						}
 					}
 					objectOutputStream.flush();
 					objectOutputStream.close();
+					objectOutputStream2.flush();
+					objectOutputStream2.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

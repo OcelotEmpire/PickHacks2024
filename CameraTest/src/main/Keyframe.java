@@ -74,4 +74,9 @@ public class Keyframe implements Serializable {
 		return exp;
 		
 	}
+	
+	public void setPoints(Point[] p)
+	{
+		this.points = p;
+	}
 }
