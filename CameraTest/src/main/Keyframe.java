@@ -60,10 +60,14 @@ public class Keyframe {
 	
 	private static double comparePoint(Point p1, Point p2, int type) {
 		double d = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
-		double k = KEYPOINT_CONSTS[type];
+		if (d == 0) return 1.0;
+		double k = 2d * KEYPOINT_CONSTS[type];
 		double s = 1d;
-		double exp = Math.exp(-(Math.pow(d, 2) / Math.max(2 * Math.pow(s, 2) * Math.pow(d, 2), 0.01)));
-//		System.out.println("DENOM: " + (2 * Math.pow(s, 2) * Math.pow(d, 2)));
+		
+		double den = (2d * Math.pow(s, 2d) * Math.pow(k, 2d));
+		
+		double exp = Math.exp(-(Math.pow(d, 2) / den));
+//		System.out.println("DENOM: " + den);
 //		System.out.println("EXP: " + exp);
 		return exp;
 		
