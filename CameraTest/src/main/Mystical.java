@@ -59,6 +59,7 @@ public class Mystical {
 			try {
 				keyframe = thinker.getQueue().poll().get();
 				System.out.println(keyframe.getPoints()[0] + ", " + keyframe.getTimestamp());
+				System.out.println("FRAME SCORE: " + Keyframe.compare(keyframe, DanceStorage.GetClosestKeyToTime(keyframe.getTimestamp())));
 				DanceStorage.add(keyframe);
 			} catch (InterruptedException | ExecutionException e) {
 				// TODO Auto-generated catch block
