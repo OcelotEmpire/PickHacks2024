@@ -15,7 +15,7 @@ public class Mystical {
 	private float progress = 0;
 	
 	public Mystical() {
-		thinker = new Thinker(6);
+		thinker = new Thinker(4);
 		observer = new Observer(0);
 	}
 	
@@ -40,9 +40,10 @@ public class Mystical {
 		long then = System.nanoTime();
 		long now;
 		double acc = 0;
+		progress = 0;
 		while (progress < duration) {
 			now = System.nanoTime();
-			double delta = (now - then) / 1e9d;
+			double delta = (now - then) * 1e-9d;
 			acc += delta;
 			progress += delta;
 			if (acc > sampleTime) {
@@ -52,8 +53,10 @@ public class Mystical {
 			}
 			then = now;
 		}
+		System.out.println("Dance over, finishing up some calculations...");
 		
 		System.out.println(thinker.getQueue().size() + " tasks queued.");
+		long startTime = System.nanoTime();
 		while (!thinker.getQueue().isEmpty()) {
 			Keyframe keyframe;
 			try {
@@ -65,7 +68,7 @@ public class Mystical {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Done!");
+		System.out.println("Done! Lasted: " + (System.nanoTime() - startTime) * 1e-9d);
 		
 		inProgress = false;
 	}
@@ -93,6 +96,6 @@ public class Mystical {
 		Mystical mystical = new Mystical();
 		Viewer viewer = new Viewer(mystical.getObserver());
 		DanceStorage.getKeyframes();
-		mystical.beginDance(10, 0.1);
+		mystical.beginDance(10, 1);
 	}
 }

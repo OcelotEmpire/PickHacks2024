@@ -48,14 +48,14 @@ public class Observer {
 //			copy = image.clone();
 //		}
 		capture.read(copy);
-		now = System.currentTimeMillis();
-		float timeStamp = (now - beginTime) / 1000.0f;
+		now = System.nanoTime();
+		float timeStamp = (now - beginTime) * 1e-9f;
 		
 		return new Photograph(copy, timeStamp);
 	}
 	
 	public void begin() {
-		beginTime = System.currentTimeMillis();
+		beginTime = System.nanoTime();
 	}
 	public void shutdown() {
 		try {

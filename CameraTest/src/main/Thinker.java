@@ -89,7 +89,7 @@ public class Thinker {
 			}
 			points[i] = p;
 		}
-		System.out.println("Lasted: " + (System.nanoTime() - startTime) * 1e-9);
+		System.out.println("Lasted: " + (System.nanoTime() - startTime) * 1e-9 + ",  Pool: " + model);
 		return new Keyframe(points, photo.timeStamp());
 	}
 	
