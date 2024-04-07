@@ -23,7 +23,7 @@ public class Keyframe {
 	};
 	
 	public static final float[] KEYPOINT_CONSTS = {
-			0.025f, 0.025f, 0.079f, 0.072f, 0.062f, 0.079f, 0.072f, 0.062f, 0.107f, 0.087f, 0.089f, 0.107f, 0.087f, 0.089f 
+			0.25f, 0.25f, 0.79f, 0.72f, 0.62f, 0.79f, 0.72f, 0.62f, 1.07f, 0.87f, 0.89f, 1.07f, 0.87f, 0.89f 
 	};
 	
 	
@@ -50,6 +50,7 @@ public class Keyframe {
 	
 	public static double compare(Keyframe k1, Keyframe k2) {
 		double sum = 0d;
+		
 		for (int i = 0; i < NUM_POINTS; i++) {
 			sum += Keyframe.comparePoint(k1.getPoints()[i], k2.getPoints()[i], i);
 		}
