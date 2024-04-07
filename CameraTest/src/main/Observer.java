@@ -25,7 +25,7 @@ public class Observer {
 		while (!capture.isOpened());
 		System.out.println("Camera connected");
 		cameraThread = new Thread(() -> startCamera());
-		cameraThread.start();
+		//cameraThread.start();
 	}
 	
 	// BLOCKING
@@ -39,14 +39,16 @@ public class Observer {
 	}
 	
 	Photograph snapshot() {
-		Mat copy;
+		Mat copy = new Mat();
 		long now;
-		synchronized (image) {
-			capture.read(image);
-			now = System.currentTimeMillis();
-			
-			copy = image.clone();
-		}
+//		synchronized (image) {
+//			capture.read(image);
+//			now = System.currentTimeMillis();
+//			
+//			copy = image.clone();
+//		}
+		capture.read(copy);
+		now = System.currentTimeMillis();
 		float timeStamp = (now - beginTime) / 1000.0f;
 		
 		return new Photograph(copy, timeStamp);

@@ -13,7 +13,7 @@ public class Mystical {
 	private float progress = 0;
 	
 	public Mystical() {
-		thinker = new Thinker(4);
+		thinker = new Thinker(12);
 		observer = new Observer(0);
 	}
 	
@@ -40,6 +40,7 @@ public class Mystical {
 			then = now;
 		}
 		
+		System.out.println(thinker.getQueue().size() + " tasks queued.");
 		while (!thinker.getQueue().isEmpty()) {
 			Keyframe keyframe;
 			try {
@@ -50,6 +51,7 @@ public class Mystical {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("Done!");
 		
 		inProgress = false;
 	}
@@ -76,6 +78,6 @@ public class Mystical {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		Mystical mystical = new Mystical();
 		Viewer viewer = new Viewer(mystical.getObserver());
-		mystical.beginDance(10, 0.1);
+		mystical.beginDance(10, 0.5);
 	}
 }

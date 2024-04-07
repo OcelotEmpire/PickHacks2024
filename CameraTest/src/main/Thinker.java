@@ -9,54 +9,66 @@ import org.opencv.core.Size;
 import org.opencv.dnn.Dnn;
 import org.opencv.dnn.Net;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Thinker {
 	// Specify the paths for the 2 files
 	static final String PROTO_FILE = "res/pose_deploy_linevec_faster_4_stages.prototxt";
 	static final String WEIGHTS_FILE = "res/pose_iter_160000.caffemodel";
 	
-	private ExecutorService multiExecutor;
-	private BlockingQueue<Future<Keyframe>> outputQueue;
-	private Net poseModel;
+	private List<ExecutorService> guesstimateExecutors;
 	
-	public Thinker(int numThreads) {
-		//monoExecutor = Executors.newSingleThreadExecutor();
-		multiExecutor = Executors.newFixedThreadPool(numThreads);
+	private BlockingQueue<Future<Keyframe>> outputQueue;
+	
+	private List<Net> poseModels;
+	
+	private int numNets;
+	
+	public Thinker(int numNets) {
+		this.numNets = numNets;
+		guesstimateExecutors = new ArrayList<>(numNets);
+		poseModels = new ArrayList<>(numNets);
+		for (int i = 0; i < numNets; i++) {
+			guesstimateExecutors.add(Executors.newSingleThreadExecutor());
+			// Read the network into Memory
+			poseModels.add(Dnn.readNetFromCaffe(PROTO_FILE, WEIGHTS_FILE)); 
+		}
+		
 		outputQueue = new LinkedBlockingQueue<>();
 
-		// Read the network into Memory
-		poseModel = Dnn.readNetFromCaffe(PROTO_FILE, WEIGHTS_FILE); 
 	}
 	
-	public void think(Photograph frame) {
+	private AtomicInteger counter = new AtomicInteger(0);
+	public void think(Photograph photo) {
+		int index = counter.incrementAndGet();
+		
 		Future<Keyframe> futureFrame = 
-				multiExecutor.submit(() -> {
-					return keyTheFrame(frame);
+				guesstimateExecutors.get(index % numNets).submit(()->{			
+					return keyTheFrame(photo, poseModels.get(index % numNets));
 				});
+		
 		outputQueue.add(futureFrame);
 	}
 	
-	public synchronized Mat guesstimate(Mat inputBlob) {
-		poseModel.setInput(inputBlob);
-		Mat output = poseModel.forward();
-		return output;
-	}
-	
-	public Keyframe keyTheFrame(Photograph photo) {
+	public Keyframe keyTheFrame(Photograph photo, Net model) {
+		
 		final Mat frame = photo.frame();
 		final int frameWidth = frame.size(1), frameHeight = frame.size(0);
 		final int inWidth = 368, inHeight = 368;
 		Mat inputBlob = Dnn.blobFromImage(frame, 1.0/255, new Size(inWidth, inHeight), new Scalar(0, 0, 0), false, false);
 		
-		Mat output = guesstimate(inputBlob);
+		model.setInput(inputBlob);
+		Mat output = model.forward();
 		
 		int outHeight = output.size(2), outWidth = output.size(3);
 		Point points[] = new Point[Keyframe.NUM_POINTS];
