@@ -23,8 +23,10 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.videoio.VideoCapture;
 
 // Class - Swing Class 
-public class Grabber extends JFrame {
-
+public class Grabber {
+	// Window
+	private JFrame frame;
+	
 	// Camera screen
 	private JLabel cameraScreen;
 
@@ -41,26 +43,26 @@ public class Grabber extends JFrame {
 
 	public Grabber() {
 		// Designing UI
-		setLayout(null);
+		frame.setLayout(null);
 
 		cameraScreen = new JLabel();
 		cameraScreen.setBounds(0, 0, 640, 480);
-		add(cameraScreen);
+		frame.add(cameraScreen);
 
 		btnCapture = new JButton("capture");
 		btnCapture.setBounds(300, 480, 80, 40);
-		add(btnCapture);
+		frame.add(btnCapture);
 
 		btnCapture.addActionListener((ActionEvent e) -> {
 			clicked = true;
 		});
 
-		setPreferredSize(new Dimension(640, 560));
-		pack();
+		frame.setPreferredSize(new Dimension(640, 560));
+		frame.pack();
 		
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setVisible(true);
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
 	}
 
 	// Creating a camera
@@ -72,11 +74,8 @@ public class Grabber extends JFrame {
 
 		ImageIcon icon;
 		while (true) {
-			// read image to matrix
-			capture.read(image);
-
-			// convert matrix to byte
-			final MatOfByte buf = new MatOfByte();
+			MatOfByte buf = this.takeCapture();
+			
 			Imgcodecs.imencode(".jpg", image, buf);
 
 			imageData = buf.toArray();
@@ -101,6 +100,15 @@ public class Grabber extends JFrame {
 				clicked = false;
 			}
 		}
+	}
+	synchronized MatOfByte takeCapture() {
+		// read image to matrix
+		capture.read(image);
+
+		// convert matrix to byte
+		final MatOfByte buf = new MatOfByte();
+		
+		return buf;
 	}
 
 	// Main driver method
