@@ -32,6 +32,7 @@ public class Grabber {
 
 	// Button for image capture
 	private JButton btnCapture;
+	private JButton btnPose;
 
 	// Start camera
 	private VideoCapture capture;
@@ -40,8 +41,11 @@ public class Grabber {
 	private Mat image;
 
 	private boolean clicked = false;
+	
+	GrabberPoseEstimation gpe;
 
 	public Grabber() {
+		frame = new JFrame("Mystical Camera");
 		// Designing UI
 		frame.setLayout(null);
 
@@ -50,11 +54,18 @@ public class Grabber {
 		frame.add(cameraScreen);
 
 		btnCapture = new JButton("capture");
-		btnCapture.setBounds(300, 480, 80, 40);
+		btnCapture.setBounds(260, 480, 80, 40);
 		frame.add(btnCapture);
 
 		btnCapture.addActionListener((ActionEvent e) -> {
 			clicked = true;
+		});
+		
+		btnPose = new JButton("estimate pose");
+		btnPose.setBounds(340, 480, 80, 40);
+		frame.add(btnPose);
+		btnPose.addActionListener((ActionEvent e) -> {
+			estimatePose();
 		});
 
 		frame.setPreferredSize(new Dimension(640, 560));
@@ -63,13 +74,15 @@ public class Grabber {
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
+
+		capture = new VideoCapture(1);
+		image = new Mat();
+		gpe = new GrabberPoseEstimation();
 	}
 
 	// Creating a camera
 	public void startCamera() {
 		System.out.println("Starting camera...");
-		capture = new VideoCapture(1);
-		image = new Mat();
 		byte[] imageData;
 
 		ImageIcon icon;
@@ -108,6 +121,9 @@ public class Grabber {
 		capture.read(image);
 		
 		return image.clone();
+	}
+	synchronized void estimatePose() {
+		gpe.estimatePose(getImage());
 	}
 
 	// Main driver method
