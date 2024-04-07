@@ -61,7 +61,7 @@ public class Thinker {
 	}
 	
 	public Keyframe keyTheFrame(Photograph photo, Net model) {
-		
+		long startTime = System.nanoTime();
 		final Mat frame = photo.frame();
 		final int frameWidth = frame.size(1), frameHeight = frame.size(0);
 		final int inWidth = 368, inHeight = 368;
@@ -89,6 +89,7 @@ public class Thinker {
 			}
 			points[i] = p;
 		}
+		System.out.println("Lasted: " + (System.nanoTime() - startTime) * 1e-9);
 		return new Keyframe(points, photo.timeStamp());
 	}
 	

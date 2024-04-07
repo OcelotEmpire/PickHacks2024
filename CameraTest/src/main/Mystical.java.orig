@@ -15,7 +15,7 @@ public class Mystical {
 	private float progress = 0;
 	
 	public Mystical() {
-		thinker = new Thinker(6);
+		thinker = new Thinker(12);
 		observer = new Observer(0);
 	}
 	
@@ -92,7 +92,11 @@ public class Mystical {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		Mystical mystical = new Mystical();
 		Viewer viewer = new Viewer(mystical.getObserver());
+<<<<<<< HEAD
+		mystical.beginDance(10, 0.5);
+=======
 		DanceStorage.getKeyframes();
 		mystical.beginDance(10, 0.1);
+>>>>>>> 83b32733dc4ffef49ce3534e054b0d8994baef4c
 	}
 }
