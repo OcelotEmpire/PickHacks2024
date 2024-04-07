@@ -78,5 +78,16 @@ public class DanceStorage implements Serializable{
 		keyframes = new ArrayList<>();
 		setKeyframes(keyframes);
 	}
+	
+	public static Keyframe GetClosestKeyToTime(float t)
+	{
+		Keyframe bestMatch = keyframes.get(0);
+		for (Keyframe k : keyframes)
+		{
+			if (Math.abs(k.getTimestamp() - t) > Math.abs(bestMatch.getTimestamp() - t)) bestMatch = k;
+		}
+		
+		return bestMatch;
+	}
 
 }

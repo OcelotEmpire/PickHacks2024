@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.EventQueue;
+import java.nio.ByteBuffer;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -40,16 +41,27 @@ public class GrabberPoseEstimation {
 		// remove later
 		int outHeight = output.size(2), outWidth = output.size(3);
 		Point points[] = new Point[Keyframe.NUM_POINTS];
+		
+//		output.convertTo(output, CvType.CV_8U);
+		byte[] bytes = new byte[(output.rows() * output.cols() * output.channels())];
+		output.get(0,0, bytes);
+		ByteBuffer buf = ByteBuffer.wrap(bytes);
+		
 		for (int i = 0; i < Keyframe.NUM_POINTS; i++) {
+<<<<<<< Updated upstream
 			Mat probMap = new Mat(outHeight, outWidth, CvType.CV_32F);
 			for (int r = 0; r < outHeight; r++) {
 				for (int c = 0; c < outWidth; c++) {
 					probMap.put(new int[] {r, c}, output.get(new int[] {0, i, r, c}));
 				}
 			}
+=======
+			Mat probMap = new Mat(outHeight, outWidth, CvType.CV_32F, buf);
+			
+>>>>>>> Stashed changes
 			Point p = new Point(-1,-1);
 			Core.MinMaxLocResult result = org.opencv.core.Core.minMaxLoc(probMap);
-			if (result.maxVal > 0.1)
+			if (result.maxVal > 0.9)
 			{
 				p = result.maxLoc;
 				p.x *= (float) frameWidth / outWidth;
