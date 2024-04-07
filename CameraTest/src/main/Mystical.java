@@ -17,7 +17,7 @@ public class Mystical {
 	
 	private float progress = 0;
 	
-	private static double dur = 10d;
+	private static double dur = 41d;
 	private static double sTime = 1d;
 	
 	private static double scoreSum = 0d;
@@ -110,6 +110,8 @@ public class Mystical {
 		Mystical mystical = new Mystical();
 		Viewer viewer = new Viewer(mystical.getObserver());
 		DanceStorage.getKeyframes();
-		mystical.beginDance(41, 1);
+		mystical.beginDance(dur, sTime);
+		
+		System.out.println("FINAL SCORE: " + scoreSum/(dur/sTime));
 	}
 }
