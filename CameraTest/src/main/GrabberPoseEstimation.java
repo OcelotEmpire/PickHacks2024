@@ -42,9 +42,24 @@ public class GrabberPoseEstimation {
 		// remove later
 		int outHeight = output.size(2), outWidth = output.size(3);
 		Point points[] = new Point[NUM_POINTS];
-//		for (int i = 0; i < NUM_POINTS; i++) {
-//			//Mat probMap = new Mat(outHeight, outWidth, CvType.CV_32F, output.);
-//		}
+		for (int i = 0; i < NUM_POINTS; i++) {
+			Mat probMap = new Mat(outHeight, outWidth, CvType.CV_32F);
+			
+			Point p = new Point(-1,-1);
+			Core.MinMaxLocResult result = org.opencv.core.Core.minMaxLoc(probMap);
+			if (result.maxVal > 0.1)
+			{
+				p = result.maxLoc;
+				p.x *= (float) frameWidth / outWidth;
+				p.y *= (float) frameHeight / outHeight;
+				
+				System.out.println("PX: " + p.x + ", PY: " + p.y);
+				
+			}
+			
+			points[i] = p;
+			
+		}
 		System.out.print("Output blob: ");
 		System.out.println(output);
 	}
