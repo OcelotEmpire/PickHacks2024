@@ -27,7 +27,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.videoio.VideoCapture;
 
 // Class - Swing Class 
-public class Grabber {
+public class Viewer {
 	public static final int CAMERA_NUM = 0;
 	
 	// Window
@@ -36,22 +36,13 @@ public class Grabber {
 	// Camera screen
 	private JPanel cameraScreen;
 
-	// Button for image capture
-	private JButton btnCapture;
-	private JButton btnPose;
-
-	// Start camera
-	private VideoCapture capture;
-
 	// Store image as 2D matrix
 	private Mat image;
 	private Keyframe keyFrame = null;
-
-	private boolean clicked = false;
 	
-	GrabberPoseEstimation gpe;
+	private Observer observer;
 
-	public Grabber() {
+	public Viewer(Observer observer) {
 		frame = new JFrame("Mystical Camera");
 		// Designing UI
 		frame.setLayout(null);
@@ -65,6 +56,7 @@ public class Grabber {
 				byte[] imageData;
 				ImageIcon icon;
 				
+				if (image.empty()) return;
 				Imgcodecs.imencode(".jpg", image, buf);
 
 				imageData = buf.toArray();
@@ -94,21 +86,6 @@ public class Grabber {
 		cameraScreen.setBounds(0, 0, 640, 480);
 		frame.add(cameraScreen);
 
-		btnCapture = new JButton("capture");
-		btnCapture.setBounds(260, 480, 80, 40);
-		frame.add(btnCapture);
-
-		btnCapture.addActionListener((ActionEvent e) -> {
-			clicked = true;
-		});
-		
-		btnPose = new JButton("estimate pose");
-		btnPose.setBounds(340, 480, 80, 40);
-		frame.add(btnPose);
-		btnPose.addActionListener((ActionEvent e) -> {
-			estimatePose();
-		});
-
 		frame.setPreferredSize(new Dimension(640, 560));
 		frame.pack();
 		
@@ -116,59 +93,20 @@ public class Grabber {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		
-		System.out.println("Looking for camera...");
-		capture = new VideoCapture(CAMERA_NUM);
-		System.out.println("Found camera!");
-		
 		image = new Mat();
-		gpe = new GrabberPoseEstimation();
+		this.observer = observer;
+		
+		new Thread(() -> {
+			this.startCamera();
+		}).start();
 	}
 
 	// Creating a camera
 	public void startCamera() {
 		
 		while (true) {
-			getImage();
-			
+			image = observer.snapshot().frame();
 			cameraScreen.repaint();
-
-			// Capture and save to file
-			if (clicked) {
-				// prompt for enter image name
-				System.out.println("Grabbing image...");
-				String name = JOptionPane.showInputDialog(this, "Enter image name");
-				if (name == null) {
-					name = "bungus";
-				}
-
-				// Write to file
-				boolean success = Imgcodecs.imwrite("res/images/" + name + ".jpg", image);
-				System.out.println(success ? "successfully saved" : "failed to save :(");
-
-				clicked = false;
-			}
 		}
-	}
-	synchronized Mat getImage() {
-		// read image to matrix
-		capture.read(image);
-		
-		return image.clone();
-	}
-	synchronized void estimatePose() {
-		keyFrame = gpe.estimatePose(getImage());
-	}
-
-	// Main driver method
-	public static void main(String[] args) {
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		EventQueue.invokeLater(() -> {
-			final Grabber grabber = new Grabber();
-
-			// Start camera in thread
-			new Thread(() -> {
-				grabber.startCamera();
-			}).start();
-		});
 	}
 }
