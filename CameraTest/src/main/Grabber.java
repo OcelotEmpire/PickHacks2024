@@ -75,7 +75,7 @@ public class Grabber {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 
-		capture = new VideoCapture(1);
+		capture = new VideoCapture(0);
 		image = new Mat();
 		gpe = new GrabberPoseEstimation();
 	}

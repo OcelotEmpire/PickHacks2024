@@ -15,7 +15,7 @@ public class GrabberPoseEstimation {
 
 	// Specify the paths for the 2 files
 	static final String PROTO_FILE = "res/pose_deploy_linevec_faster_4_stages.prototxt";
-	static final String WEIGHTS_FILE = "res/pose_iter_116000.caffemodel";
+	static final String WEIGHTS_FILE = "res/pose_iter_160000.caffemodel";
 	
 	static final int NUM_POINTS = 14;
 	
@@ -27,9 +27,16 @@ public class GrabberPoseEstimation {
 	}
 	
 	public void estimatePose(Mat frame) {
-		final int inWidth = frame.size(0), inHeight = frame.size(1);
+		System.out.print("Input frame: ");
+		System.out.println(frame);
+		final int frameWidth = frame.size(1), frameHeight = frame.size(0);
+		final int inWidth = 368, inHeight = 368;
 		Mat inputBlob = Dnn.blobFromImage(frame, 1.0/255, new Size(inWidth, inHeight), new Scalar(0, 0, 0), false, false);
+		System.out.print("Input blob: ");
+		System.out.println(inputBlob);
 		net.setInput(inputBlob);
+		System.out.print("Net:");
+		System.out.println(net);
 		Mat output = net.forward();
 		
 		// remove later
@@ -38,6 +45,7 @@ public class GrabberPoseEstimation {
 //		for (int i = 0; i < NUM_POINTS; i++) {
 //			//Mat probMap = new Mat(outHeight, outWidth, CvType.CV_32F, output.);
 //		}
+		System.out.print("Output blob: ");
 		System.out.println(output);
 	}
 	
