@@ -46,6 +46,7 @@ public class Grabber {
 	// Store image as 2D matrix
 	private Mat image;
 	private Keyframe keyFrame = null;
+	private Keyframe firstFrame = null;
 
 	private boolean clicked = false;
 	
@@ -157,6 +158,8 @@ public class Grabber {
 	}
 	synchronized void estimatePose() {
 		keyFrame = gpe.estimatePose(getImage());
+		if (firstFrame == null) firstFrame = keyFrame;
+		System.out.println("SCORE: " + Keyframe.compare(keyFrame, firstFrame));
 	}
 
 	// Main driver method

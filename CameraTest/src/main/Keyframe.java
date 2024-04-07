@@ -1,5 +1,8 @@
 package main;
 
+import java.util.Dictionary;
+import java.util.Map;
+
 import org.opencv.core.Point;
 
 public class Keyframe {
@@ -18,6 +21,11 @@ public class Keyframe {
 			"r_hip", "r_knee", "r_foot",
 			"l_hip", "l_knee", "l_foot",
 	};
+	
+	public static final float[] KEYPOINT_CONSTS = {
+			0.25f, 0.25f, 0.79f, 0.72f, 0.62f, 0.79f, 0.72f, 0.62f, 1.07f, 0.87f, 0.89f, 1.07f, 0.87f, 0.89f 
+	};
+	
 	
 	private Point[] points;
 	private float timestamp;
@@ -40,7 +48,31 @@ public class Keyframe {
 		return this.timestamp;
 	}
 	
-	static public double compare(Keyframe k1, Keyframe k2) {
-		return 0d;
+	public static double compare(Keyframe k1, Keyframe k2) {
+		double sum = 0d;
+		
+		for (int i = 0; i < NUM_POINTS; i++) {
+			Point diff = new Point(k1.points[0].x - k2.points[0].x, k1.points[0].y - k2.points[0].y);
+			Point compPoint = new Point (k2.getPoints()[i].x - diff.x, k2.getPoints()[i].y - diff.y);
+			sum += Keyframe.comparePoint(k1.getPoints()[i], compPoint, i);
+		}
+		
+//		System.out.println("SUM: " + sum);
+		return sum / NUM_POINTS;
+	}
+	
+	private static double comparePoint(Point p1, Point p2, int type) {
+		double d = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+		if (d == 0) return 1.0;
+		double k = 2d * KEYPOINT_CONSTS[type];
+		double s = 1d;
+		
+		double den = (2d * Math.pow(s, 2d) * Math.pow(k, 2d));
+		
+		double exp = Math.exp(-(Math.pow(d, 2) / den));
+//		System.out.println("DENOM: " + den);
+//		System.out.println("EXP: " + exp);
+		return exp;
+		
 	}
 }
