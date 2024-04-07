@@ -26,6 +26,7 @@ public class Door {
 		
 		try {
 			os.write(255);
+			os.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -9,7 +9,7 @@ import javax.sound.sampled.LineUnavailableException;
 import org.opencv.core.Core;
 
 public class Mystical {
-	public static final int WINNING_SCORE = 100;
+	public static final double WINNING_SCORE = 1;
 	private Thinker thinker;
 	private Observer observer;
 	private Speaker speaker;
