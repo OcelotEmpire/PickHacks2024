@@ -48,12 +48,13 @@ public class Keyframe {
 		return this.timestamp;
 	}
 	
-	public static double compare(Keyframe k1, Keyframe k2, int type) {
+	public static double compare(Keyframe k1, Keyframe k2) {
 		double sum = 0d;
 		for (int i = 0; i < NUM_POINTS; i++) {
 			sum += Keyframe.comparePoint(k1.getPoints()[i], k2.getPoints()[i], i);
 		}
 		
+//		System.out.println("SUM: " + sum);
 		return sum / NUM_POINTS;
 	}
 	
@@ -61,8 +62,10 @@ public class Keyframe {
 		double d = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
 		double k = KEYPOINT_CONSTS[type];
 		double s = 1d;
-		double exp = Math.exp(-(Math.pow(d, 2) / (2 * Math.pow(s, 2) * Math.pow(d, 2))));
-		return 0d;
+		double exp = Math.exp(-(Math.pow(d, 2) / Math.max(2 * Math.pow(s, 2) * Math.pow(d, 2), 0.01)));
+//		System.out.println("DENOM: " + (2 * Math.pow(s, 2) * Math.pow(d, 2)));
+//		System.out.println("EXP: " + exp);
+		return exp;
 		
 	}
 }
