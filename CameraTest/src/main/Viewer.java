@@ -100,6 +100,10 @@ public class Viewer {
 			this.startCamera();
 		}).start();
 	}
+	
+	public void showKeyframe(Keyframe frame) {
+		this.keyFrame = frame;
+	}
 
 	// Creating a camera
 	public void startCamera() {

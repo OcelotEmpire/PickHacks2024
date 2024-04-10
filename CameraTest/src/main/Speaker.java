@@ -13,15 +13,14 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException; 
 
 public class Speaker {
-//	private Clip clip;
-//	public Speaker() throws LineUnavailableException {
-//		clip = AudioSystem.getClip();
-//	}
+	private Clip clip;
+	public Speaker() throws LineUnavailableException {
+		clip = AudioSystem.getClip();
+	}
 
-	public static synchronized void playAudio(String path) {
+	public synchronized void playAudio(String path) {
 		new Thread(() -> {
 			try {
-				Clip clip = AudioSystem.getClip();
 				AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
 				clip.open(inputStream);
 				clip.start();

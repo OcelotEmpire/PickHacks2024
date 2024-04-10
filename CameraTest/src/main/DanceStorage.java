@@ -21,6 +21,7 @@ public class DanceStorage implements Serializable{
 	private static ArrayList<Keyframe> keyframes = new ArrayList<>();
 
 	public static ArrayList<Keyframe> getKeyframes() {
+		System.out.println("Loading keyframes");
 		try {
 			FileInputStream fileInputStream = new FileInputStream("DanceStorage.txt");
 		    ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
@@ -49,6 +50,7 @@ public class DanceStorage implements Serializable{
 			System.out.println(e);
 		}
 	    
+		System.out.println("Loaded keyframes.");
 		return keyframes;
 	}
 
@@ -101,7 +103,7 @@ public class DanceStorage implements Serializable{
 		setKeyframes(keyframes);
 	}
 	
-	public static Keyframe GetClosestKeyToTime(float t)
+	public static Keyframe getClosestKeyToTime(float t)
 	{
 		Keyframe bestMatch = keyframes.get(0);
 		for (Keyframe k : keyframes)
